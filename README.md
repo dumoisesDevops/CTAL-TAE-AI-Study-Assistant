@@ -187,7 +187,7 @@ Abra um Pull Request para revisão e integração.
 
 Eduardo Moises
 QA Engineer | Test Automation | Cloud & DevOps
-📧 contato: [seu-email]
+📧 contato: [eduardo.moisesqa@hotmail.com]
 
 🧾 Licença
 
