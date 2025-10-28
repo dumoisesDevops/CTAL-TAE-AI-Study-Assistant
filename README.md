@@ -1,164 +1,130 @@
-🎯 Objetivo do Projeto
+# 🤖 CTAL-TAE AI Tutor
 
-Este projeto implementa um Agente de IA para auxiliar nos estudos da certificação ISTQB CTAL-TAE (Test Automation Engineer).
-O sistema permite:
+Agente de IA para auxiliar nos estudos da certificação **ISTQB CTAL-TAE (Test Automation Engineer)**.  
+O sistema gera simulados automáticos, avalia respostas, explica conceitos e acompanha seu progresso.
 
-Geração de simulados automáticos com base no syllabus oficial;
+---
 
-Avaliação de respostas e explicações detalhadas;
+## 🎯 Objetivo do Projeto
 
-Acompanhamento de desempenho e progresso;
+Este projeto foi criado para automatizar o estudo e prática da certificação **ISTQB CTAL-TAE**, permitindo:
 
-Revisão personalizada por tópico;
+- 🧠 Geração automática de simulados com base no syllabus oficial  
+- ✅ Correção automática e explicações detalhadas  
+- 📊 Acompanhamento de desempenho e progresso  
+- 📚 Revisão personalizada por tópico  
+- 🔗 Integração com modelos de linguagem (LLM) **open source e locais**
 
-Integração com LLMs (OpenAI / Amazon Bedrock / modelo local).
+---
 
-⚙️ Arquitetura do Sistema
+## ⚙️ Arquitetura do Sistema
+
+```plaintext
 Frontend (React + TypeScript + Vite)
-│
-├── Simulados, flashcards e estatísticas
+│   ├── Simulados, flashcards e estatísticas
 │
 Backend (Python + FastAPI)
+│   ├── API REST para geração, correção e progresso
 │
-├── API REST para geração, correção e progresso
-│
-LLM Provider (OpenAI / Bedrock / Local)
-│
-├── Geração de questões, feedback e explicações
+LLM Provider (Ollama + Llama3)
+│   ├── Geração de perguntas, feedback e explicações
 │
 Banco de Dados (PostgreSQL)
+│   ├── Armazena usuários, simulados e desempenho
 │
-├── Armazena usuários, simulados e desempenho
-│
-Vector DB (Weaviate / Milvus)
-│
-├── Armazena embeddings do syllabus
+Vector DB (Weaviate)
+│   ├── Busca semântica no syllabus
 │
 Fila (Redis + Celery)
-│
-├── Processa geração assíncrona de simulados
+│   ├── Processa geração assíncrona de simulados
 │
 CI/CD (GitHub Actions)
-│
-└── Build + Test + Deploy automático via Docker
+│   └── Build + Test + Deploy automático via Docker
 
-🧩 Stack Técnica
-Componente	Tecnologia	Descrição
-Backend	Python 3.11 + FastAPI	API e orquestração da IA
-Frontend	React + Vite + Tailwind CSS	Interface web moderna
-LLM Provider	OpenAI / Amazon Bedrock	Geração de perguntas e explicações
-Banco de Dados	PostgreSQL	Armazenamento persistente
-Vector DB	Weaviate / Milvus	Busca semântica no syllabus
-Cache/Fila	Redis + Celery	Processos assíncronos
-Infra	Docker + GitHub Actions	Automação e deploy contínuo
-Observabilidade	Sentry + Grafana (opcional)	Monitoramento e logs
+
+
+
+| Componente         | Tecnologia                  | Descrição                 |
+| ------------------ | --------------------------- | ------------------------- |
+| **Backend**        | Python 3.11 + FastAPI       | API e orquestração da IA  |
+| **Frontend**       | React + Vite + Tailwind     | Interface web moderna     |
+| **LLM Provider**   | Ollama (Llama3)             | Modelo local open source  |
+| **Banco de Dados** | PostgreSQL                  | Armazenamento persistente |
+| **Vector DB**      | Weaviate                    | Busca semântica           |
+| **Cache / Fila**   | Redis + Celery              | Processos assíncronos     |
+| **Infraestrutura** | Docker + GitHub Actions     | Deploy contínuo           |
+| **Monitoramento**  | Grafana + Sentry (opcional) | Logs e métricas           |
+
+
 🚀 Como Começar (Setup Local)
 1️⃣ Clonar o repositório
-git clone https://github.com/<seu-usuario>/ctal-tae-ai-tutor.git
+
+git clone https://github.com/eduardomoises/ctal-tae-ai-tutor.git
 cd ctal-tae-ai-tutor
 
-2️⃣ Estrutura inicial
-ctal-tae-ai-tutor/
-│
-├── backend/
-│   ├── app/
-│   │   ├── main.py
-│   │   ├── routes/
-│   │   ├── services/
-│   │   └── models/
-│   ├── requirements.txt
-│   └── Dockerfile
-│
-├── frontend/
-│   ├── src/
-│   ├── vite.config.ts
-│   └── Dockerfile
-│
-├── docker-compose.yml
-├── README.md
-└── .github/workflows/ci-cd.yml
 
-🧱 Backend – Setup e Execução
-1️⃣ Instalar dependências (modo local)
-cd backend
-pip install -r requirements.txt
+2️⃣ Criar arquivo .env na raiz
 
-2️⃣ Rodar localmente (modo dev)
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
-
-3️⃣ Endpoints principais
-Método	Endpoint	Função
-POST	/api/simulado/create	Gera um simulado baseado no syllabus
-POST	/api/simulado/submit	Envia respostas e calcula pontuação
-GET	/api/syllabus/search	Busca trechos do syllabus
-GET	/api/progress/{user_id}	Retorna estatísticas de estudo
-🖥️ Frontend – Setup e Execução
-1️⃣ Instalar dependências
-cd frontend
-npm install
-
-2️⃣ Rodar localmente
-npm run dev
-
-3️⃣ Estrutura inicial do front
-
-/simulado → faz requisição ao backend para gerar questões.
-
-/dashboard → exibe progresso e recomendações.
-
-/login → autenticação via JWT.
-
-🐳 Executando com Docker
-1️⃣ Criar .env na raiz:
-OPENAI_API_KEY=sk-xxxxxx
 DATABASE_URL=postgresql://user:password@db:5432/ai_tutor
 REDIS_URL=redis://redis:6379
-PROVIDER=openai
+PROVIDER=ollama
+LLM_MODEL=llama3
 
-2️⃣ Subir o ambiente completo:
+
+**3️⃣ Instalar o LLM local (sem custo)
+
+Baixe o Ollama → https://ollama.com/download**
+
+
+**ollama pull llama3
+ollama list
+*4️⃣ Rodar Backend (modo local)
+
+cd backend
+pip install -r requirements.txt
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+
+Acesse:
+👉 http://localhost:8000/docs
+
+5️⃣ Rodar Frontend (modo local)
+cd ../frontend
+npm install
+npm run dev
+
+
+Acesse:
+👉 http://localhost:5173
+
+🐳 Executando com Docker
+1️⃣ Subir o ambiente completo
 docker-compose up --build
 
+2️⃣ Containers disponíveis
+Serviço	Função
+backend	API FastAPI
+frontend	App React
+db	PostgreSQL
+redis	Fila de tarefas
+weaviate	Banco vetorial
+ollama	Modelo Llama3 local
+🧠 LLM Provider (Ollama)
 
-Containers:
+O Ollama permite usar modelos locais de forma 100% gratuita.
+Modelos recomendados:
 
-backend → API FastAPI
+ollama pull llama3
+ollama pull mistral
+ollama pull phi3
 
-frontend → React App
 
-db → PostgreSQL
+No .env, basta alternar:
 
-redis → Fila de tarefas
-
-weaviate → Vector DB
-
-🧠 LLM Providers (Configuração)
-🔹 OpenAI (recomendado para início)
-
-Crie uma conta em https://platform.openai.com
-
-Pegue sua API Key
-
-Configure no .env:
-
-PROVIDER=openai
-OPENAI_API_KEY=sk-xxxxx
-
-🔹 Amazon Bedrock
-
-Ative o Bedrock na sua conta AWS.
-
-Crie um usuário IAM com permissão bedrock:* e gere credenciais.
-
-Configure no .env:
-
-PROVIDER=bedrock
-AWS_ACCESS_KEY_ID=xxxx
-AWS_SECRET_ACCESS_KEY=xxxx
-AWS_REGION=us-east-1
+LLM_MODEL=mistral
 
 🔄 CI/CD – GitHub Actions
 
-.github/workflows/ci-cd.yml
+Arquivo: .github/workflows/ci-cd.yml
 
 name: CI/CD
 on: [push]
@@ -178,39 +144,36 @@ jobs:
       - name: Build Docker
         run: docker-compose build
       - name: Deploy
-        run: echo "🚀 (Deploy step - configure ECS, Railway, Render ou Vercel)"
+        run: echo "🚀 (Deploy step - configure Render ou Vercel)"
 
-📊 Observabilidade
+📊 Observabilidade (opcional)
+Ferramenta	Função
+Sentry	Rastrear exceções do backend
+Prometheus + Grafana	Métricas e monitoramento
+Loki	Logs estruturados
+🧠 Como Estudar com o Agente
 
-Sentry → rastrear exceções do backend.
+Suba o projeto (docker-compose up)
 
-Prometheus + Grafana → monitorar uso de CPU, memória e latência da API.
+Acesse http://localhost:5173
 
-Logs estruturados → enviados para CloudWatch (AWS) ou Loki.
+Escolha um capítulo do syllabus
 
-🧠 Como estudar com o agente
+Clique em Gerar Simulado
 
-Suba o projeto com docker-compose up.
+Responda → IA corrige e explica
 
-Abra http://localhost:5173.
-
-Escolha um capítulo do syllabus.
-
-Clique em Gerar Simulado → IA cria questões com base no tópico.
-
-Responda → IA corrige e explica.
-
-Veja seu progresso no dashboard.
+Acompanhe seu progresso no dashboard
 
 🪄 Próximas Etapas
 
- Adicionar modo “Chat com o Syllabus” (tipo ChatGPT sobre o PDF).
+💬 Chat com o syllabus (PDF + embeddings)
 
- Adicionar ranking e comparativo de performance.
+🧩 Revisão automática de tópicos fracos
 
- Integrar API do Telegram para responder via chat.
+🏆 Ranking e gamificação
 
- Implementar modo “Revisão Automática” (IA sugere o que revisar).
+🤖 Integração com Telegram Bot
 
 🧰 Contribuição
 git checkout -b feature/nova-funcionalidade
@@ -225,4 +188,15 @@ Abra um Pull Request para revisão e integração.
 Eduardo Moises
 QA Engineer | Test Automation | Cloud & DevOps
 📧 contato: [seu-email]
-🌐 GitHub: [github.com/seu-usuario]
+
+🧾 Licença
+
+Este projeto é distribuído sob a licença MIT – uso livre e open source.
+📄 Consulte o arquivo LICENSE para mais detalhes.
+
+🏷️ Badges
+
+
+
+
+
