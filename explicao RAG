@@ -1,0 +1,107 @@
+🧠 O que é RAG (Retrieval-Augmented Generation)
+O RAG é uma arquitetura híbrida que combina:
+
+
+Um modelo de linguagem (LLM) — como GPT, Llama, Claude, etc.
+
+
+Uma base de conhecimento externa (banco vetorial, documentos, PDFs, etc.)
+
+
+A ideia é:
+
+O LLM não aprende o conteúdo novo (como no treinamento tradicional), mas busca informações relevantes numa base de dados em tempo real para gerar respostas contextualizadas.
+
+
+🔍 Exemplo simples
+Imagine que você suba o PDF do syllabus do curso e pergunte ao assistente:
+
+“Quais são os tópicos de DevOps cobrados na prova TAE?”
+
+O LLM sozinho (sem RAG) não saberia — ele responderia com base no que já foi treinado até 2024.
+Mas com RAG, o sistema faz o seguinte:
+
+
+Extrai o texto do PDF
+
+
+Divide o texto em pedaços (“chunks”) — ex: 200 a 500 tokens cada
+
+
+Converte cada pedaço em vetor (usando embeddings)
+
+
+Salva esses vetores em um banco vetorial (ex: FAISS, Chroma, Pinecone, etc.)
+
+
+Quando o usuário faz uma pergunta, o sistema:
+
+
+Converte a pergunta em vetor
+
+
+Busca os trechos mais similares no banco vetorial
+
+
+Passa esses trechos junto com a pergunta para o modelo responder.
+
+
+
+
+
+⚙️ Fluxo técnico (resumido)
+Usuário faz pergunta
+        ↓
+Conversão da pergunta → vetor
+        ↓
+Busca no banco vetorial → retorna chunks relevantes
+        ↓
+Prompt final = pergunta + contexto encontrado
+        ↓
+LLM gera resposta fundamentada
+
+
+🧩 Benefícios
+✅ Atualizável — você pode mudar a base (ex: novo PDF) sem re-treinar o modelo
+✅ Seguro — evita que o LLM “invente” respostas (reduz alucinações)
+✅ Customizável — cada projeto pode ter sua própria base (syllabus, documentos internos etc.)
+✅ Rápido — a busca é vetorial, muito eficiente
+
+📚 No seu projeto (assistente-cx)
+Você vai usar o RAG para:
+
+
+Fazer upload do PDF do syllabus
+
+
+Indexar o conteúdo (armazenar embeddings no banco vetorial)
+
+
+Quando o usuário fizer perguntas, o backend:
+
+
+Busca os trechos relevantes do syllabus
+
+
+Passa esses trechos + a pergunta para o modelo
+
+
+Gera uma resposta específica, baseada no conteúdo do PDF
+
+
+
+
+
+Posso te mostrar o fluxo completo em código (Python FastAPI) com:
+
+
+Upload de PDF
+
+
+Extração e vetorização do texto
+
+
+Busca e geração de resposta com RAG
+
+
+Quer que eu te mostre esse exemplo prático agora (baseado no seu backend atual)?
