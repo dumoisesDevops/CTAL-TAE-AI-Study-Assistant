@@ -1,4 +1,4 @@
-import Simulado from "./Simulado";
+import Simulado from "./pages/Simulado";
 
 function App() {
   return (

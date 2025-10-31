@@ -8,3 +8,7 @@ openai==0.28.0
 redis==5.3.1
 celery==5.5.2
 python-dotenv==1.0.1
+fastapi
+uvicorn[standard]
+psycopg2-binary
+requests

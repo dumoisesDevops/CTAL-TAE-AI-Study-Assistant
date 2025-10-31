@@ -1,30 +1,21 @@
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
-from app.routes.simulado import router as simulado_router  # importar a rota de simulados
+import os
+import requests
 
-app = FastAPI(title="Assistente CX API")
+# PostgreSQL
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://user:password@db:5432/assistente_cx")
 
-# CORS para frontend React
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# Ollama
+OLLAMA_HOST = os.getenv("OLLAMA_HOST", "ollama")
+OLLAMA_PORT = int(os.getenv("OLLAMA_PORT", 11434))
 
-# Rotas de simulados
-app.include_router(simulado_router, prefix="/simulado")
+OLLAMA_URL = f"http://{OLLAMA_HOST}:{OLLAMA_PORT}"
 
-# Rotas de teste existentes
-class Message(BaseModel):
-    text: str
-
-@app.get("/")
-def home():
-    return {"message": "API Assistente CX rodando 🎯"}
-
-@app.post("/analyze")
-def analyze_message(msg: Message):
-    return {"reply": f"Analisando sua mensagem: {msg.text}"}
+def test_ollama():
+    try:
+        res = requests.get(f"{OLLAMA_URL}/health")
+        if res.status_code == 200:
+            print("Ollama OK!")
+        else:
+            print("Ollama retornou erro:", res.status_code)
+    except Exception as e:
+        print("Erro de conexão com Ollama:", e)

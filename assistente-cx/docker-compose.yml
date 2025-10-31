@@ -1,44 +1,43 @@
 version: "3.9"
 
 services:
-  db:
-    image: postgres:16-alpine
-    container_name: assistente-cx-db-1
-    restart: always
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: assistente_cx
-    ports:
-      - "5432:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    container_name: backend
-    restart: always
-    depends_on:
-      - db
+    build: ./backend
+    container_name: assistente-cx-backend
     ports:
       - "8000:8000"
     environment:
-      DATABASE_URL: postgres://postgres:postgres@db:5432/assistente_cx
+      DATABASE_URL: ${DATABASE_URL}
+      REDIS_URL: ${REDIS_URL}
+      OLLAMA_URL: ${OLLAMA_URL}
+      MODEL: ${MODEL}
+    depends_on:
+      - db
+      - redis
 
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    container_name: frontend
-    restart: always
-    depends_on:
-      - backend
+    build: ./frontend
+    container_name: assistente-cx-frontend
     ports:
       - "5173:5173"
+
+  db:
+    image: postgres:15
+    container_name: assistente-cx-db
     environment:
-      VITE_API_URL: http://localhost:8000
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Sam@370750
+      POSTGRES_DB: ai_tutor
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:7
+    container_name: assistente-cx-redis
+    ports:
+      - "6379:6379"
 
 volumes:
-  pgdata:
+  db_data:
